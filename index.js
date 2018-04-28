@@ -5,4 +5,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+    res.send('hello');
+});
+
 app.listen(3000, () => console.log('Webhook server is listening, port 3000'));
