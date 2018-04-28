@@ -1,0 +1,16 @@
+{
+  "name": "fb_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eduard Simonyan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bootbot": "^1.0.14",
+    "express": "^4.16.3"
+  }
+}
