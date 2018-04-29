@@ -9,4 +9,5 @@ app.get('/', (req, res) => {
     res.send('hello');
 });
 
-app.listen(3000, () => console.log('Webhook server is listening, port 3000'));
+const port = parseInt(process.env.PORT, 10) || 3000;
+app.listen(port, () => console.log('Webhook server is listening, port 3000'));
