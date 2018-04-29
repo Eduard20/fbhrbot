@@ -7,7 +7,6 @@ const bot = new BootBot({
     appSecret: process.env['FB_APP_SECRET']
 });
 bot.on('message', (payload, chat) => {
-    console.log(payload, chat);
     const text = payload.message.text;
     chat.say(`Echo: ${text}`);
 });
