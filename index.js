@@ -6,7 +6,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-    res.send('hello');
+    res.send('1861186213');
 });
 
 const port = parseInt(process.env.PORT, 10) || 3000;
