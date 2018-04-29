@@ -20,9 +20,9 @@
 const BootBot = require('bootbot');
 
 const bot = new BootBot({
-    accessToken: 'EAAFjzqFYDZAwBACCCbL3r9nd94XZCzBfMyZCvkOLjOTi77hpdVsL8p89dAax27RUT8JlzEEVEiCbCRg2HpGlUnv9wjsy7irqRqZBiZCzTw2rQi2sGBEoPLJSGniIdicVZCgm8mpo20bg8iZC7JpCWZCZC5RV1ZBYaQeMfd0Dlz5Td05QqVVFg0eCtj',
-    verifyToken: 'hrbot',
-    appSecret: '041a590e2707c4c0f5c0c210ebb96049'
+    accessToken: process.env['FB_ACCESS_TOKEN'],
+    verifyToken: process.env['FB_VERIFY_TOKEN'],
+    appSecret: process.env['FB_APP_SECRET']
 });
 bot.on('message', (payload, chat) => {
     console.log(payload, chat);
