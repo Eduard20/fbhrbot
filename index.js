@@ -20,9 +20,9 @@
 const BootBot = require('bootbot');
 
 const bot = new BootBot({
-    accessToken: 'EAAMekGZAoKGEBALqPDjJjhgolT09YEPwmoSDe3pRH8RR4ZCaq9aGE0ZBgOffEW0KQXdN4DM9m6FCTR1ZADyGcSGYDZBSakurhlZCZB8fBah6DIXH7s8RM4nWfWVZCnI5RENQBkeX7bqKitGNE5xAyYFDOdX9YD9yzQ1CnEHuuc2kZB8CxSASrIbla',
+    accessToken: 'EAAFjzqFYDZAwBACCCbL3r9nd94XZCzBfMyZCvkOLjOTi77hpdVsL8p89dAax27RUT8JlzEEVEiCbCRg2HpGlUnv9wjsy7irqRqZBiZCzTw2rQi2sGBEoPLJSGniIdicVZCgm8mpo20bg8iZC7JpCWZCZC5RV1ZBYaQeMfd0Dlz5Td05QqVVFg0eCtj',
     verifyToken: 'hrbot',
-    appSecret: '5dde2b5ba220f918a3e6be66c4d79a6a'
+    appSecret: '041a590e2707c4c0f5c0c210ebb96049'
 });
 bot.on('message', (payload, chat) => {
     console.log(payload, chat);
