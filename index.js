@@ -30,4 +30,4 @@ bot.on('message', (payload, chat) => {
     chat.say(`Echo: ${text}`);
 });
 
-bot.start();
+bot.start(parseInt(process.env.PORT, 10) || 3000);
