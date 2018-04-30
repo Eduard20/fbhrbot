@@ -12,14 +12,20 @@ bot.setGetStartedButton((payload, chat) => {
   const options = { typing: true };
   chat.say({
 	text: texts.activation,
-	quickReplies: ['Red', 'Blue', 'Green']
-  }, options).then(() => chat.say({
-	text: 'Favorite color?',
-	buttons: [
-		{ type: 'postback', title: 'Red', payload: 'FAVORITE_RED' },
-		{ type: 'postback', title: 'Blue', payload: 'FAVORITE_BLUE' },
-		{ type: 'postback', title: 'Green', payload: 'FAVORITE_GREEN' }
-	]
-  }, options));
+	quickReplies: ['/start']
+  }, options);
 });
+
+bot.hear('/start',(payload,chat) => {
+  chat.say({
+    text:'hellloooo',
+    quickReplies:[{
+      "content_type":"text",
+      "title":"/start",
+      "payload":"<POSTBACK_PAYLOAD>",
+      "image_url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ02OVEsIlkuaHdGRZD56bchujOeYJNfzTyVLJwihOmfFdEcYW4"
+    }]
+  });
+});
+
 bot.start(parseInt(process.env.PORT, 10) || 3000);
