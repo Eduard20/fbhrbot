@@ -20,10 +20,10 @@ bot.hear('/start',(payload,chat) => {
   chat.say({
     text:'hellloooo',
     quickReplies:[{
-      "content_type":"text",
-      "title":"/start",
+      "content_type":"user_phone_number",
+      "title":"My Phone",
       "payload":"<POSTBACK_PAYLOAD>",
-      "image_url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ02OVEsIlkuaHdGRZD56bchujOeYJNfzTyVLJwihOmfFdEcYW4"
+      "image_url":"http://excursioncairodaytour.com/img/call.png"
     }]
   });
 });
