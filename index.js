@@ -13,12 +13,9 @@ bot.on('message', (payload, chat) => {
     chat.say(`Echo: ${text}`);
 });
 
-bot.start(); 
-
-
 // bot.on('message', (payload, chat) => {
 //     const text = payload.message.text;
 //     chat.say(`Echo f: ${text}`);
 // });
 //
-// bot.start(parseInt(process.env.PORT, 10) || 3000);
+bot.start(parseInt(process.env.PORT, 10) || 3000);
