@@ -21,9 +21,6 @@ bot.hear('/start',(payload,chat) => {
     text:'hellloooo',
     quickReplies:[{
       "content_type":"user_phone_number",
-      "title":"My Phone",
-      "payload":"<POSTBACK_PAYLOAD>",
-      "image_url":"http://excursioncairodaytour.com/img/call.png"
     }]
   });
 });
