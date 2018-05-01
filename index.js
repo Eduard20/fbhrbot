@@ -169,7 +169,12 @@ bot.hear('/start', (payload, chat) => {
 });
 
 bot.on('message', (payload, chat) => {
-  chat.say(`НЕЛЬЗЯ ТАК`);
+  const text = payload.message.text;
+  if (text =='/start'){
+    return
+  }else {
+    chat.say(`НЕЛЬЗЯ ТАК`);
+  }
 });
 
 
