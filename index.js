@@ -8,41 +8,67 @@ const bot = new BootBot({
     appSecret: process.env['FB_APP_SECRET']
 });
 
-// bot.setGetStartedButton((payload, chat) => {
-//   const options = { typing: true };
-//   chat.say({
-// 	text: texts.activation,
-// 	quickReplies: ['/start']
-//   }, options);
-// });
+const date = ['1.05.2018','3.05.2018']
 
-// bot.hear('/start',(payload,chat) => {
+
+
+bot.setGetStartedButton((payload, chat) => {
+  const options = { typing: true };
+  chat.say({
+	text: texts.activation,
+	quickReplies: ['/start']
+  }, options);
+});
+
 //   chat.say({
 //     text:'hellloooo',
 //     quickReplies:[{
 //       "content_type":"user_phone_number",
 //     }]
 //   });
-// });
 
 
-const askName = (convo) => {
-  convo.ask(`Hello! What's your name?`, (payload, convo, data) => {
+const askNumber = (convo) => {
+  convo.ask((convo)=>{
+    const Replies = [{'content_type':'user_phone_number'}]
+    convo.ask({
+      text:texts.howToConnect,
+      quickReplies:Replies
+    },{typing:true})
+  }, (payload, convo, data) => {
     const text = payload.message.text;
-    convo.set('name', text);
-    convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
+    convo.set('number', text);
+    askFavoriteFood(convo);
   });
 };
 
-const askFavoriteFood = (convo) => {
-  convo.ask(`What's your favorite food?`, (payload, convo, data) => {
-    const text = payload.message.text;
-    convo.set('food', text);
-    convo.say(`Got it, your favorite food is ${text}`).then(() => askGender(convo));
-  });
+const askDay = (convo) => {
+  convo.ask((convo)=>{
+    const buttons = [
+      { type: 'postback', title:date[0], payload: 'FIRST_DAY'},
+      { type: 'postback', title:date[1], payload: 'SECOND_DAY'},
+    ]
+    convo.sendButtonTemplate(texts.chooseDay,buttons)
+  }, (payload, convo, data) => {
+    convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askDay(convo));
+  },[
+    {
+      event:'postback:FIRST_DAY',
+      callback: (payload,convo) =>{
+        convo.set('day', date[0]).then(()=>askDayHalf(convo));
+      }
+    },
+    {
+      event:'postback:SECOND_DAY',
+      callback: (payload,convo) =>{
+        convo.set('day', date[1]).then(()=>askDayHalf(convo));
+      }
+    }
+  ]
+  );
 };
 
-const askGender = (convo) => {
+const askDayHalf = (convo) => {
   convo.ask((convo) => {
     const buttons = [
       { type: 'postback', title: 'Male', payload: 'GENDER_MALE' },
@@ -100,29 +126,15 @@ const askAge = (convo) => {
   });
 };
 
-bot.hear('hello', (payload, chat) => {
+bot.hear('/start', (payload, chat) => {
   chat.conversation((convo) => {
-    convo.sendTypingIndicator(1000).then(() => askName(convo));
+    convo.sendTypingIndicator(1000).then(() => askNumber(convo));
   });
-});
-
-bot.hear('hey', (payload, chat) => {
-  chat.say('Hello friend', { typing: true }).then(() => (
-    chat.say('So, I’m good at talking about the weather. Other stuff, not so good. If you need help just enter “help.”', { typing: true })
-  ));
 });
 
 bot.hear('color', (payload, chat) => {
   chat.say({
     text: 'Favorite color?',
-    quickReplies: ['Red', 'Blue', 'Green']
-  });
-});
-
-bot.hear('image', (payload, chat) => {
-  chat.say({
-    attachment: 'image',
-    url: 'http://static3.gamespot.com/uploads/screen_medium/1365/13658182/3067965-overwatch-review-promo-20160523_v2.jpg',
     quickReplies: ['Red', 'Blue', 'Green']
   });
 });
