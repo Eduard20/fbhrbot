@@ -173,7 +173,11 @@ bot.on('message', (payload, chat) => {
   if (text =='/start'){
     return
   }else {
-    chat.say(`НЕЛЬЗЯ ТАК`);
+    const options = { typing: true };
+    chat.say({
+  	text: texts.activation,
+  	quickReplies: ['/start']
+    }, options);
   }
 });
 
