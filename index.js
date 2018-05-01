@@ -120,11 +120,11 @@ const askTime = (convo) => {
       callback: (payload,convo) =>{
         convo.set('time', time[0]);
         convo.say(`That's great!`).then(() => {
-          convo.say(`Вот что мне удалось собрать:
-  - Твой телевой:  ${convo.get('number')}
-    - День встречи:  ${convo.get('day')}
-      - Половину дня встречи:  ${convo.get('dayHalf')==1?'День':'Вечер'}
-        - И точное время:  ${convo.get('time')}`);
+          convo.say(`Вот что мне удалось собрать
+- Твой телевой:  ${convo.get('number')}
+- День встречи:  ${convo.get('day')}
+- Половину дня встречи:  ${convo.get('dayHalf')==1?'День':'Вечер'}
+- И точное время:  ${convo.get('time')}`);
         })
         convo.end()
       }
