@@ -33,8 +33,10 @@ const askNumber = (convo) => {
     const Replies = [{'content_type':'user_phone_number'}]
     convo.ask({
       text:texts.howToConnect,
-      quickReplies:Replies
-    },{typing:true})
+      quickReplies:[{
+        "content_type":"user_phone_number"
+      }]
+    },{typing:true});
   }, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('number', text);
