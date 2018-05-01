@@ -132,7 +132,7 @@ const askTime = (convo) => {
     {
         event:'postback:TIME_1',
         callback: (payload,convo) =>{
-          convo.set('time', time[0]);
+          convo.set('time', time[1]);
           convo.say(`Отлично!`).then(() => {
             convo.say(`Вот что мне удалось собрать
 - Твой телевой:  ${convo.get('number')}
@@ -146,7 +146,7 @@ const askTime = (convo) => {
     {
         event:'postback:TIME_2',
         callback: (payload,convo) =>{
-          convo.set('time', time[0]);
+          convo.set('time', time[2]);
           convo.say(`Отлично!`).then(() => {
             convo.say(`Вот что мне удалось собрать
 - Твой телевой:  ${convo.get('number')}
