@@ -105,31 +105,31 @@ const askDayHalf = (convo) => {
   ]);
 };
 
-const askTime = (convo) => {
-  convo.ask((convo)=>{
-    const buttons = [
-      { type: 'postback', title: time[0], payload: 'TIME_0' },
-      { type: 'postback', title: time[1], payload: 'TIME_1' },
-      { type: 'postback', title: time[2], payload: 'TIME_2' },
-    ];
-    convo.sendTypingIndicator(1000).then(() => convo.sendButtonTemplate(texts.chooseRange, buttons));
-  }, (payload, convo, data) => {
-    const text = payload.message.text;
-    if((time.indexOf(text) > -1)){
-      convo.set('time',text)
-      convo.say(`That's great!`).then(() => {
-        convo.say(`Вот что мне удалось собрать:
-          - Твой телевой: ${convo.get('number')}
-          - День встречи:${convo.get('day')}
-          - Половину дня встречи:${convo.get('dayHalf')}
-          - И точное время:${convo.get('time')}`);
-      })
-      convo.end()
-    }else {
-      convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askTime(convo));
-    }
-  });
-};
+// const askTime = (convo) => {
+//   convo.ask((convo)=>{
+//     const buttons = [
+//       { type: 'postback', title: time[0], payload: 'TIME_0' },
+//       { type: 'postback', title: time[1], payload: 'TIME_1' },
+//       { type: 'postback', title: time[2], payload: 'TIME_2' },
+//     ];
+//     convo.sendTypingIndicator(1000).then(() => convo.sendButtonTemplate(texts.chooseRange, buttons));
+//   }, (payload, convo, data) => {
+//     const text = payload.message.text;
+//     if((time.indexOf(text) > -1)){
+//       convo.set('time',text)
+//       convo.say(`That's great!`).then(() => {
+//         convo.say(`Вот что мне удалось собрать:
+//           - Твой телевой: ${convo.get('number')}
+//           - День встречи:${convo.get('day')}
+//           - Половину дня встречи:${convo.get('dayHalf')}
+//           - И точное время:${convo.get('time')}`);
+//       })
+//       convo.end()
+//     }else {
+//       convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askTime(convo));
+//     }
+//   });
+// };
 
 const askTime = (convo) => {
   convo.ask((convo) => {
