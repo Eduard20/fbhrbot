@@ -9,6 +9,7 @@ const bot = new BootBot({
 });
 
 const date = ['1.05.2018','3.05.2018']
+const time = ['13:00','13:20','13:40','14:00','14:20','14:40','15:00','15:20','15:40','16:00']
 
 
 
@@ -43,14 +44,6 @@ const askNumber = (convo) => {
   });
 };
 
-const askName = (convo) => {
-  convo.ask(`Hello! What's your name?`, (payload, convo, data) => {
-    const text = payload.message.text;
-    convo.set('name', text);
-    convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
-  });
-};
-
 
 const askDay = (convo) => {
   convo.ask((convo)=>{
@@ -61,79 +54,87 @@ const askDay = (convo) => {
     convo.sendButtonTemplate(texts.chooseDay,buttons)
   }, (payload, convo, data) => {
     convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askDay(convo));
-  },[
-    {
+  },[{
       event:'postback:FIRST_DAY',
       callback: (payload,convo) =>{
-        convo.set('day', date[0]).then(()=>askDayHalf(convo));
+        convo.set('day', date[0]);
+        askDayHalf(convo);
       }
     },
     {
       event:'postback:SECOND_DAY',
       callback: (payload,convo) =>{
-        convo.set('day', date[1])
+        convo.set('day', date[1]);
         askDayHalf(convo);
       }
     }
-  ]
-  );
+  ]);
 };
 
 const askDayHalf = (convo) => {
   convo.ask((convo) => {
     const buttons = [
-      { type: 'postback', title: 'Male', payload: 'GENDER_MALE' },
-      { type: 'postback', title: 'Female', payload: 'GENDER_FEMALE' },
-      { type: 'postback', title: 'I don\'t wanna say', payload: 'GENDER_UNKNOWN' }
+      { type: 'postback', title: 'утро', payload: 'MORNING' },
+      { type: 'postback', title: 'день', payload: 'DAY' },
+      { type: 'postback', title: 'вечер', payload: 'EVENING' }
     ];
-    convo.sendButtonTemplate(`Are you a boy or a girl?`, buttons);
+    convo.sendButtonTemplate(texts.chooseRange, buttons);
   }, (payload, convo, data) => {
-    const text = payload.message.text;
-    convo.set('gender', text);
-    convo.say(`Great, you are a ${text}`).then(() => askAge(convo));
-  }, [
-      {
-        event: 'postback',
-        callback: (payload, convo) => {
-          convo.say('You clicked on a button').then(() => askAge(convo));
-        }
-      },
-      {
-        event: 'postback:GENDER_MALE',
-        callback: (payload, convo) => {
-          convo.say('You said you are a Male').then(() => askAge(convo));
-        }
-      },
-      {
-        event: 'quick_reply',
-        callback: () => { }
-      },
-      {
-        event: 'quick_reply:COLOR_BLUE',
-        callback: () => { }
-      },
-      {
-        pattern: ['yes', /yea(h)?/i, 'yup'],
-        callback: () => {
-          convo.say('You said YES!').then(() => askAge(convo));
-        }
+    convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askDayHalf(convo));
+  },[{
+      event:'postback:MORNING',
+      callback: (payload,convo) =>{
+        convo.set('dayHalf', 0);
+        askTime(convo);
       }
-    ]);
+    },
+    {
+        event:'postback:DAY',
+        callback: (payload,convo) =>{
+          convo.set('dayHalf', 1);
+          askTime(convo);
+        }
+    },
+    {
+        event:'postback:EVENING',
+        callback: (payload,convo) =>{
+          convo.set('dayHalf', 2);
+          askTime(convo);
+        }
+    }
+  ]);
 };
 
-const askAge = (convo) => {
-  convo.ask(`Final question. How old are you?`, (payload, convo, data) => {
+const askTime = (convo) => {
+  convo.ask((convo)=>{
+    const buttons = [
+      { type: 'postback', title: time[0], payload: 'TIME' },
+      { type: 'postback', title: time[1], payload: 'TIME' },
+      { type: 'postback', title: time[2], payload: 'TIME' },
+      { type: 'postback', title: time[3], payload: 'TIME' },
+      { type: 'postback', title: time[4], payload: 'TIME' },
+      { type: 'postback', title: time[5], payload: 'TIME' },
+      { type: 'postback', title: time[6], payload: 'TIME' },
+      { type: 'postback', title: time[7], payload: 'TIME' },
+      { type: 'postback', title: time[8], payload: 'TIME' },
+      { type: 'postback', title: time[9], payload: 'TIME' },
+    ];
+    convo.sendTypingIndicator(1000).then(() => convo.sendButtonTemplate(texts.chooseRange, buttons));
+  }, (payload, convo, data) => {
     const text = payload.message.text;
-    convo.set('age', text);
-    convo.say(`That's great!`).then(() => {
-      convo.say(`Ok, here's what you told me about you:
-      - Name: ${convo.get('name')}
-      - Favorite Food: ${convo.get('food')}
-      - Gender: ${convo.get('gender')}
-      - Age: ${convo.get('age')}
-      `);
-      convo.end();
-    });
+    if((time.indexOf(text) > -1)){
+      convo.set('time',text)
+      convo.say(`That's great!`).then(() => {
+        convo.say(`Вот что мне удалось собрать:
+          - Твой телевой: ${convo.get('number')}
+          - День встречи:${convo.get('day')}
+          - Половину дня встречи:${convo.get('dayHalf')}
+          - И точное время:${convo.get('time')}`);
+      })
+      convo.end()
+    }else {
+      convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askTime(convo));
+    }
   });
 };
 
