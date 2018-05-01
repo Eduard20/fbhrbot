@@ -133,12 +133,12 @@ const askTime = (convo) => {
         event:'postback:TIME_1',
         callback: (payload,convo) =>{
           convo.set('time', time[0]);
-          convo.say(`That's great!`).then(() => {
-            convo.say(`Вот что мне удалось собрать:
-              - Твой телевой: ${convo.get('number')}
-              - День встречи:${convo.get('day')}
-              - Половину дня встречи:${convo.get('dayHalf')}
-              - И точное время:${convo.get('time')}`);
+          convo.say(`Отлично!`).then(() => {
+            convo.say(`Вот что мне удалось собрать
+- Твой телевой:  ${convo.get('number')}
+- День встречи:  ${convo.get('day')}
+- Половину дня встречи:  ${convo.get('dayHalf')==1?'День':'Вечер'}
+- И точное время:  ${convo.get('time')}`);
           })
           convo.end()
         }
@@ -147,12 +147,12 @@ const askTime = (convo) => {
         event:'postback:TIME_2',
         callback: (payload,convo) =>{
           convo.set('time', time[0]);
-          convo.say(`That's great!`).then(() => {
-            convo.say(`Вот что мне удалось собрать:
-              - Твой телевой: ${convo.get('number')}
-              - День встречи:${convo.get('day')}
-              - Половину дня встречи:${convo.get('dayHalf')}
-              - И точное время:${convo.get('time')}`);
+          convo.say(`Отлично!`).then(() => {
+            convo.say(`Вот что мне удалось собрать
+- Твой телевой:  ${convo.get('number')}
+- День встречи:  ${convo.get('day')}
+- Половину дня встречи:  ${convo.get('dayHalf')==1?'День':'Вечер'}
+- И точное время:  ${convo.get('time')}`);
           })
           convo.end()
         }
