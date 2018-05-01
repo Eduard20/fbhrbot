@@ -71,7 +71,8 @@ const askDay = (convo) => {
     {
       event:'postback:SECOND_DAY',
       callback: (payload,convo) =>{
-        convo.set('day', date[1]).then(()=>askDayHalf(convo));
+        convo.set('day', date[1])
+        askDayHalf(convo);
       }
     }
   ]
