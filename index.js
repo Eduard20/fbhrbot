@@ -119,7 +119,7 @@ const askTime = (convo) => {
       event:'postback:TIME_0',
       callback: (payload,convo) =>{
         convo.set('time', time[0]);
-        convo.say(`That's great!`).then(() => {
+        convo.say(`Отлично!`).then(() => {
           convo.say(`Вот что мне удалось собрать
 - Твой телевой:  ${convo.get('number')}
 - День встречи:  ${convo.get('day')}
