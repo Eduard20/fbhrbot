@@ -38,7 +38,7 @@ const askNumber = (convo) => {
   }, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('number', text);
-    askFavoriteFood(convo);
+    askDay(convo);
   });
 };
 
