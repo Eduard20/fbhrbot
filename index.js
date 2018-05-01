@@ -28,21 +28,29 @@ bot.setGetStartedButton((payload, chat) => {
 //   });
 
 
+
 const askNumber = (convo) => {
-  convo.ask((convo)=>{
-    const Replies = [{'content_type':'user_phone_number'}]
-    convo.ask({
+  convo.ask(
+    {
       text:texts.howToConnect,
       quickReplies:[{
-        "content_type":"user_phone_number"
+        "content_type":"user_phone_number",
       }]
-    },{typing:true});
-  }, (payload, convo, data) => {
+    }, (payload, convo, data) => {
     const text = payload.message.text;
     convo.set('number', text);
     askDay(convo);
   });
 };
+
+const askName = (convo) => {
+  convo.ask(`Hello! What's your name?`, (payload, convo, data) => {
+    const text = payload.message.text;
+    convo.set('name', text);
+    convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
+  });
+};
+
 
 const askDay = (convo) => {
   convo.ask((convo)=>{
