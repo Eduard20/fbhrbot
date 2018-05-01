@@ -113,11 +113,6 @@ const askTime = (convo) => {
       { type: 'postback', title: time[2], payload: 'TIME' },
       { type: 'postback', title: time[3], payload: 'TIME' },
       { type: 'postback', title: time[4], payload: 'TIME' },
-      { type: 'postback', title: time[5], payload: 'TIME' },
-      { type: 'postback', title: time[6], payload: 'TIME' },
-      { type: 'postback', title: time[7], payload: 'TIME' },
-      { type: 'postback', title: time[8], payload: 'TIME' },
-      { type: 'postback', title: time[9], payload: 'TIME' },
     ];
     convo.sendTypingIndicator(1000).then(() => convo.sendButtonTemplate(texts.chooseRange, buttons));
   }, (payload, convo, data) => {
