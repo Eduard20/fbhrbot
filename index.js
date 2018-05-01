@@ -168,40 +168,8 @@ bot.hear('/start', (payload, chat) => {
   });
 });
 
-bot.hear('color', (payload, chat) => {
-  chat.say({
-    text: 'Favorite color?',
-    quickReplies: ['Red', 'Blue', 'Green']
-  });
-});
-
-bot.hear('button', (payload, chat) => {
-  chat.say({
-    text: 'Select a button',
-    buttons: ['Male', 'Female', `Don't wanna say`]
-  });
-});
-
-bot.hear('convo', (payload, chat) => {
-  chat.conversation(convo => {
-    convo.ask({
-      text: 'Favorite color?',
-      quickReplies: ['Red', 'Blue', 'Green']
-    }, (payload, convo) => {
-      const text = payload.message.text;
-      convo.say(`Oh your favorite color is ${text}, cool!`);
-      convo.end();
-    }, [
-        {
-          event: 'quick_reply',
-          callback: (payload, convo) => {
-            const text = payload.message.text;
-            convo.say(`Thanks for choosing one of the options. Your favorite color is ${text}`);
-            convo.end();
-          }
-        }
-      ]);
-  });
+bot.on('message', (payload, chat) => {
+  chat.say(`НЕЛЬЗЯ ТАК`);
 });
 
 
