@@ -118,7 +118,7 @@ const askTime = (convo) => {
         event:'quick_reply',
         callback: (quick_reply) =>{
           console.log(quick_reply)
-          convo.set('time', time[2]);
+          convo.set('time', quick_reply.message.text);
           convo.say(`Отлично!`).then(() => {
             convo.say(`Вот что мне удалось собрать
 - Твой телевой:  ${convo.get('number')}
