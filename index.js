@@ -21,15 +21,6 @@ bot.setGetStartedButton((payload, chat) => {
   }, options);
 });
 
-//   chat.say({
-//     text:'hellloooo',
-//     quickReplies:[{
-//       "content_type":"user_phone_number",
-//     }]
-//   });
-
-
-
 const askNumber = (convo) => {
   convo.ask(
     {
