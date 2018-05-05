@@ -108,8 +108,8 @@ const askNumber = (convo) => {
 };
 
 
-const askDay = (convo) => {
-    const date = getDates();
+const askDay = async (convo) => {
+    const date = await getDates();
     convo.ask((convo)=>{
     const buttons = [
       { type: 'postback', title:date[0], payload: 'FIRST_DAY'},
@@ -136,7 +136,6 @@ const askDay = (convo) => {
 };
 
 const askDayHalf = (convo) => {
-    console.log(convo.get('day'));
   convo.ask((convo) => {
     const buttons = [
       { type: 'postback', title: 'утро', payload: 'MORNING' },
