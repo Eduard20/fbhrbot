@@ -202,11 +202,11 @@ const askTime = async (convo) => {
                                     }
                                 }
                                 if (_.isEmpty(array)) {
-                                    addRow(doc, convo.get('day'), quick_reply.message.text, null,
+                                    addRow(doc, [convo.get('day'), quick_reply.message.text, null,
                                             'name',
                                             convo.get('number'), null, null, 'в процессе', null,
                                         quick_reply.sender.id,
-                                        'fb_token'
+                                        'fb_token']
                                     )
                                         .then(doc => {
                                             convo.say(`Отлично!`).then(() => {

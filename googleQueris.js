@@ -6,7 +6,6 @@ const spreadsheetId = '1E2X_vcSwVz5QHsW9lPKSwxMS6VKTvNVvy4RzIfY1QMw';
 module.exports = {
 
     addRow: (auth, row) => {
-        console.log(row);
         return new Promise(resolve => {
             sheets.spreadsheets.values.append({
                 auth,
