@@ -138,7 +138,7 @@ const askDay = (convo) => {
 };
 
 const askDayHalf = (convo) => {
-    convo.get('day');
+    console.log(convo.get('day'));
   convo.ask((convo) => {
     const buttons = [
       { type: 'postback', title: 'утро', payload: 'MORNING' },
