@@ -108,8 +108,8 @@ const askNumber = (convo) => {
 };
 
 
-const askDay = async (convo) => {
-    const date = await getDates();
+const askDay = (convo) => {
+    const date = getDates();
     convo.ask((convo)=>{
     const buttons = [
       { type: 'postback', title:date[0], payload: 'FIRST_DAY'},
@@ -170,12 +170,11 @@ const askDayHalf = (convo) => {
 };
 
 
-const askTime = (convo) => {
-    console.log(makeMinutes(convo, convo.get('dayHalf')));
+const askTime = async (convo) => {
     convo.sendTypingIndicator(1000).then(convo.ask(
   {
      text: texts.chooseRange,
-      quickReplies: makeMinutes(convo, convo.get('dayHalf'))
+      quickReplies: await makeMinutes(convo, convo.get('dayHalf'))
   }, (payload, convo, data) => {
     convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askTime(convo));
   },[
