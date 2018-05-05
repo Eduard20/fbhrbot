@@ -2,8 +2,12 @@
 const BootBot = require('bootbot');
 const texts = require('./texts/common');
 const fs = require('fs');
-const { authorize, getRows } = require('./googleAuthorization');
-const moment = require('moment');
+const { authorize } = require('./googleAuthorization');
+const { getRows } = require('./googleQueris');
+const Moment = require('moment');
+const MomentRange = require('moment-range');
+const _ = require('lodash');
+const moment = MomentRange.extendMoment(Moment);
 
 const bot = new BootBot({
     accessToken: process.env['FB_ACCESS_TOKEN'],
@@ -11,77 +15,77 @@ const bot = new BootBot({
     appSecret: process.env['FB_APP_SECRET']
 });
 
-const date = ['1.05.2018','3.05.2018'];
+const ranges = [
+    [10, 12],
+    [13, 16],
+    [16, 19]
+];
+
 const time = ['13:00','13:20','13:40','14:00','14:20','14:40','15:00','15:20','15:40','16:00'];
 
-// function getDates() {
-//     const time = moment.unix(ctx.update.message.date).format();
-//     let firstDay, secondDay;
-//     switch (moment(time).isoWeekday()) {
-//         case 4:
-//             firstDay = moment(time).add(1, 'day').format('DD/MM/YYYY');
-//             secondDay = moment(time).add(4, 'day').format('DD/MM/YYYY');
-//             break;
-//         case 5:
-//             firstDay = moment(time).add(3, 'day').format('DD/MM/YYYY');
-//             secondDay = moment(time).add(4, 'day').format('DD/MM/YYYY');
-//             break;
-//         case 6:
-//             firstDay = moment(time).add(2, 'day').format('DD/MM/YYYY');
-//             secondDay = moment(time).add(3, 'day').format('DD/MM/YYYY');
-//             break;
-//         default:
-//             firstDay = moment(time).add(1, 'day').format('DD/MM/YYYY');
-//             secondDay = moment(time).add(2, 'day').format('DD/MM/YYYY');
-//             break;
-//     }
-//     return [firstDay, secondDay];
-// }
-//
-// console.log(getDates());
+function getDates() {
+    const time = moment(new Date()).format();
+    let firstDay, secondDay;
+    switch (moment(time).isoWeekday()) {
+        case 4:
+            firstDay = moment(time).add(1, 'day').format('DD/MM/YYYY');
+            secondDay = moment(time).add(4, 'day').format('DD/MM/YYYY');
+            break;
+        case 5:
+            firstDay = moment(time).add(3, 'day').format('DD/MM/YYYY');
+            secondDay = moment(time).add(4, 'day').format('DD/MM/YYYY');
+            break;
+        case 6:
+            firstDay = moment(time).add(2, 'day').format('DD/MM/YYYY');
+            secondDay = moment(time).add(3, 'day').format('DD/MM/YYYY');
+            break;
+        default:
+            firstDay = moment(time).add(1, 'day').format('DD/MM/YYYY');
+            secondDay = moment(time).add(2, 'day').format('DD/MM/YYYY');
+            break;
+    }
+    return [firstDay, secondDay];
+}
 
+function makeMinutes(convo, i, type) {
+    const from = moment(ranges[i][0].toString(), 'h').format();
+    const till = moment(ranges[i][1].toString(), 'h').format();
+    const range = moment.range(from, till);
+    const hours = Array.from(range.by('minutes', { step: 30 })).map(one => one.format('HH:mm'));
 
-// function makeTwentyMinutes(ctx, i, type) {
-//     const from = moment(ranges[i][0].toString(), 'h').format();
-//     const till = moment(ranges[i][1].toString(), 'h').format();
-//     const range = moment.range(from, till);
-//     const hours = Array.from(range.by('minutes', { step: 20 })).map(one => one.format('HH:mm'));
-//     const resultArr = [];
-//
-//     return new Promise((resolve, reject) => {
-//         if (type) {
-//             return resolve(hours)
-//         }
-//
-//         fs.readFile('client_secret.json', (err, content) => {
-//             if (err) {
-//                 console.log('Error loading client secret file: ' + err);
-//                 return;
-//             }
-//
-//             // Authorize a client with the loaded credentials, then call the Google Sheets API.
-//             authorize(JSON.parse(content))
-//                 .then(doc => {
-//                     getRows(doc, globalObj[ctx.update.callback_query.from.id].day, ctx.tg.token)
-//                         .then(doc => {
-//                             _.each(doc, one => {
-//                                 const found = _.find(hours, two => one === two);
-//                                 if (found) {
-//                                     hours.splice(hours.indexOf(found), 1);
-//                                 }
-//                             });
-//                             hours.forEach(one => {
-//                                 resultArr.push(Markup.callbackButton(one, one));
-//                             });
-//                             return resolve(_.chunk(resultArr, resultArr.length/3));
-//                         })
-//                         .catch(console.error)
-//                 })
-//                 .catch(console.error)
-//         });
-//     });
-//
-// }
+    return new Promise((resolve, reject) => {
+        if (type) {
+            return resolve(hours)
+        }
+
+        fs.readFile('client_secret.json', (err, content) => {
+            if (err) {
+                console.log('Error loading client secret file: ' + err);
+                return;
+            }
+
+            // Authorize a client with the loaded credentials, then call the Google Sheets API.
+            authorize(JSON.parse(content))
+                .then(doc => {
+                    getRows(doc, convo.get('day'), 'fb_token')
+                        .then(doc => {
+                            _.each(doc, one => {
+                                const found = _.find(hours, two => one === two);
+                                if (found) {
+                                    hours.splice(hours.indexOf(found), 1);
+                                }
+                            });
+                            return resolve(hours);
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+        });
+    });
+
+}
+
+makeMinutes({day: '01/05/2018'}, 0);
 
 bot.setGetStartedButton((payload, chat) => {
   const options = { typing: true };
@@ -107,7 +111,7 @@ const askNumber = (convo) => {
 
 
 const askDay = (convo) => {
-    console.log(convo);
+    const date = getDates();
     convo.ask((convo)=>{
     const buttons = [
       { type: 'postback', title:date[0], payload: 'FIRST_DAY'},
@@ -132,12 +136,6 @@ const askDay = (convo) => {
     }
   ]);
 };
-
-const ranges = [
-    [10, 12],
-    [13, 16],
-    [16, 19]
-];
 
 const askDayHalf = (convo) => {
   convo.ask((convo) => {
@@ -175,10 +173,11 @@ const askDayHalf = (convo) => {
 
 
 const askTime = (convo) => {
-  convo.sendTypingIndicator(1000).then(convo.ask(
+    console.log(makeMinutes(convo, convo.get('dayHalf')));
+    convo.sendTypingIndicator(1000).then(convo.ask(
   {
      text: texts.chooseRange,
-      quickReplies: time
+      quickReplies: makeMinutes(convo, convo.get('dayHalf'))
   }, (payload, convo, data) => {
     convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askTime(convo));
   },[
