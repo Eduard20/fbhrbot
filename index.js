@@ -3,11 +3,12 @@ const BootBot = require('bootbot');
 const texts = require('./texts/common');
 const fs = require('fs');
 const { authorize } = require('./googleAuthorization');
-const { getRows } = require('./googleQueris');
+const { getRows, getAllRows, addRow, updateRow } = require('./googleQueris');
 const Moment = require('moment');
 const MomentRange = require('moment-range');
 const _ = require('lodash');
 const moment = MomentRange.extendMoment(Moment);
+const responses = require('./texts/responses');
 
 const bot = new BootBot({
     accessToken: process.env['FB_ACCESS_TOKEN'],
@@ -20,8 +21,6 @@ const ranges = [
     [13, 16],
     [16, 19]
 ];
-
-const time = ['13:00','13:20','13:40','14:00','14:20','14:40','15:00','15:20','15:40','16:00'];
 
 function getDates() {
     const time = moment(new Date()).format();
@@ -181,16 +180,80 @@ const askTime = async (convo) => {
     {
         event:'quick_reply',
         callback: (quick_reply) =>{
-          console.log(quick_reply)
-          convo.set('time', quick_reply.message.text);
-          convo.say(`Отлично!`).then(() => {
-            convo.say(`Вот что мне удалось собрать
+
+            fs.readFile('client_secret.json', (err, content) => {
+                if (err) {
+                    console.log('Error loading client secret file: ' + err);
+                    return;
+                }
+
+                // Authorize a client with the loaded credentials, then call the Google Sheets API.
+                authorize(JSON.parse(content))
+                    .then(doc => {
+                        getAllRows(doc)
+                            .then(data => {
+                                const array = [];
+                                let index = 0;
+                                for (let i = 1; i < data.length; i++) {
+                                    let row = data[i];
+                                    if (quick_reply.sender.id.toString() === row[9]) {
+                                        index = ++i;
+                                        array.push(row);
+                                    }
+                                }
+                                if (_.isEmpty(array)) {
+                                    addRow(doc, convo.get('day'), quick_reply.message.text, null,
+                                            'name',
+                                            convo.get('number'), null, null, 'в процессе', null,
+                                        quick_reply.sender.id,
+                                        'fb_token'
+                                    )
+                                        .then(doc => {
+                                            convo.say(`Отлично!`).then(() => {
+                                                convo.say(`Вот что мне удалось собрать
 - Твой телевой:  ${convo.get('number')}
 - День встречи:  ${convo.get('day')}
-- Половину дня встречи:  ${convo.get('dayHalf')==1?'День':'Вечер'}
-- И точное время:  ${convo.get('time')}`);
-          })
-          convo.end()
+- И точное время:  ${quick_reply.message.text}`);
+                                            });
+                                            convo.end();
+                                        })
+                                        .catch(console.error);
+                                    return;
+                                }
+
+                                updateRow(doc,
+                                    [ convo.get('day'),
+                                        quick_reply.message.text, null,
+                                        'name',
+                                        convo.get('number'), null, null, 'в процессе', null,
+                                        quick_reply.sender.id,
+                                        'fb_token']
+                                    , `A${index}:K${index}`)
+                                    .then(doc => {
+                                        convo.say(`Отлично!`).then(() => {
+                                            convo.say(`Вот что мне удалось собрать
+- Твой телевой:  ${convo.get('number')}
+- День встречи:  ${convo.get('day')}
+- И точное время:  ${quick_reply.message.text}`);
+                                        });
+                                        convo.end();
+                                    })
+                                    .catch(console.error);
+                            });
+
+
+                    })
+                    .catch(console.error)
+            });
+//           convo.set('time', quick_reply.message.text);
+//           convo.say(`Отлично!`).then(() => {
+//             convo.say(`Вот что мне удалось собрать
+// - Твой телевой:  ${convo.get('number')}
+// - День встречи:  ${convo.get('day')}
+// - Половину дня встречи:  ${convo.get('dayHalf')==1?'День':'Вечер'}
+// - И точное время:  ${convo.get('time')}`);
+//           })
+//           convo.end()
         }
     }
   ]));
