@@ -1,6 +1,9 @@
 'use strict';
 const BootBot = require('bootbot');
-const texts = require('./texts/common')
+const texts = require('./texts/common');
+const fs = require('fs');
+const { authorize, getRows } = require('./googleAuthorization');
+const moment = require('moment');
 
 const bot = new BootBot({
     accessToken: process.env['FB_ACCESS_TOKEN'],
@@ -8,10 +11,77 @@ const bot = new BootBot({
     appSecret: process.env['FB_APP_SECRET']
 });
 
-const date = ['1.05.2018','3.05.2018']
-const time = ['13:00','13:20','13:40','14:00','14:20','14:40','15:00','15:20','15:40','16:00']
+const date = ['1.05.2018','3.05.2018'];
+const time = ['13:00','13:20','13:40','14:00','14:20','14:40','15:00','15:20','15:40','16:00'];
+
+// function getDates() {
+//     const time = moment.unix(ctx.update.message.date).format();
+//     let firstDay, secondDay;
+//     switch (moment(time).isoWeekday()) {
+//         case 4:
+//             firstDay = moment(time).add(1, 'day').format('DD/MM/YYYY');
+//             secondDay = moment(time).add(4, 'day').format('DD/MM/YYYY');
+//             break;
+//         case 5:
+//             firstDay = moment(time).add(3, 'day').format('DD/MM/YYYY');
+//             secondDay = moment(time).add(4, 'day').format('DD/MM/YYYY');
+//             break;
+//         case 6:
+//             firstDay = moment(time).add(2, 'day').format('DD/MM/YYYY');
+//             secondDay = moment(time).add(3, 'day').format('DD/MM/YYYY');
+//             break;
+//         default:
+//             firstDay = moment(time).add(1, 'day').format('DD/MM/YYYY');
+//             secondDay = moment(time).add(2, 'day').format('DD/MM/YYYY');
+//             break;
+//     }
+//     return [firstDay, secondDay];
+// }
+//
+// console.log(getDates());
 
 
+// function makeTwentyMinutes(ctx, i, type) {
+//     const from = moment(ranges[i][0].toString(), 'h').format();
+//     const till = moment(ranges[i][1].toString(), 'h').format();
+//     const range = moment.range(from, till);
+//     const hours = Array.from(range.by('minutes', { step: 20 })).map(one => one.format('HH:mm'));
+//     const resultArr = [];
+//
+//     return new Promise((resolve, reject) => {
+//         if (type) {
+//             return resolve(hours)
+//         }
+//
+//         fs.readFile('client_secret.json', (err, content) => {
+//             if (err) {
+//                 console.log('Error loading client secret file: ' + err);
+//                 return;
+//             }
+//
+//             // Authorize a client with the loaded credentials, then call the Google Sheets API.
+//             authorize(JSON.parse(content))
+//                 .then(doc => {
+//                     getRows(doc, globalObj[ctx.update.callback_query.from.id].day, ctx.tg.token)
+//                         .then(doc => {
+//                             _.each(doc, one => {
+//                                 const found = _.find(hours, two => one === two);
+//                                 if (found) {
+//                                     hours.splice(hours.indexOf(found), 1);
+//                                 }
+//                             });
+//                             hours.forEach(one => {
+//                                 resultArr.push(Markup.callbackButton(one, one));
+//                             });
+//                             return resolve(_.chunk(resultArr, resultArr.length/3));
+//                         })
+//                         .catch(console.error)
+//                 })
+//                 .catch(console.error)
+//         });
+//     });
+//
+// }
 
 bot.setGetStartedButton((payload, chat) => {
   const options = { typing: true };
@@ -37,11 +107,12 @@ const askNumber = (convo) => {
 
 
 const askDay = (convo) => {
-  convo.ask((convo)=>{
+    console.log(convo);
+    convo.ask((convo)=>{
     const buttons = [
       { type: 'postback', title:date[0], payload: 'FIRST_DAY'},
       { type: 'postback', title:date[1], payload: 'SECOND_DAY'},
-    ]
+    ];
     convo.sendButtonTemplate(texts.chooseDay,buttons)
   }, (payload, convo, data) => {
     convo.say(`Необходимо нажать на одну из кнопок!`).then(() => askDay(convo));
@@ -61,6 +132,12 @@ const askDay = (convo) => {
     }
   ]);
 };
+
+const ranges = [
+    [10, 12],
+    [13, 16],
+    [16, 19]
+];
 
 const askDayHalf = (convo) => {
   convo.ask((convo) => {
