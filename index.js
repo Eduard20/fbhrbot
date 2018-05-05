@@ -85,8 +85,6 @@ function makeMinutes(convo, i, type) {
 
 }
 
-makeMinutes({day: '01/05/2018'}, 0);
-
 bot.setGetStartedButton((payload, chat) => {
   const options = { typing: true };
   chat.say({
