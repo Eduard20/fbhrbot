@@ -202,7 +202,7 @@ const askTime = async (convo) => {
                                     }
                                 }
                                 if (_.isEmpty(array)) {
-                                  chat.getUserProfile().then((user) => {
+                                  convo.getUserProfile().then((user) => {
                                     const name = `${user.first_name}, ${user.last_name}`
                                     addRow(doc,
                                       [convo.get('day'),
@@ -225,7 +225,7 @@ const askTime = async (convo) => {
                                         .catch(console.error);
                                     return;
                                 }
-                                chat.getUserProfile().then((user) => {
+                                convo.getUserProfile().then((user) => {
                                 const name = `${user.first_name}, ${user.last_name}`
                                 updateRow(doc,
                                     [ convo.get('day'),
