@@ -202,29 +202,35 @@ const askTime = async (convo) => {
                                     }
                                 }
                                 if (_.isEmpty(array)) {
-                                    addRow(doc, [convo.get('day'), quick_reply.message.text, null,
-                                            'name',
+                                  chat.getUserProfile().then((user) => {
+                                    const name = `${user.first_name}, ${user.last_name}`
+                                    addRow(doc,
+                                      [convo.get('day'),
+                                          quick_reply.message.text, null,
+                                            name,
                                             convo.get('number'), null, null, 'в процессе', null,
                                         quick_reply.sender.id,
                                         'fb_token']
                                     )
-                                        .then(doc => {
-                                            convo.say(`Отлично!`).then(() => {
-                                                convo.say(`Вот что мне удалось собрать
+                                    .then(doc => {
+                                        convo.say(`Отлично!`).then(() => {
+                                            convo.say(`Вот что мне удалось собрать
 - Твой телевой:  ${convo.get('number')}
 - День встречи:  ${convo.get('day')}
 - И точное время:  ${quick_reply.message.text}`);
                                             });
                                             convo.end();
-                                        })
+                                        });
+                                      })
                                         .catch(console.error);
                                     return;
                                 }
-
+                                chat.getUserProfile().then((user) => {
+                                const name = `${user.first_name}, ${user.last_name}`
                                 updateRow(doc,
                                     [ convo.get('day'),
                                         quick_reply.message.text, null,
-                                        'name',
+                                        name,
                                         convo.get('number'), null, null, 'в процессе', null,
                                         quick_reply.sender.id,
                                         'fb_token']
@@ -239,6 +245,7 @@ const askTime = async (convo) => {
                                         convo.end();
                                     })
                                     .catch(console.error);
+                                  });
                             });
 
 
